@@ -1,0 +1,25 @@
+{
+  "name": "jspm-config-test",
+  "version": "0.0.0",
+  "description": "A tool to run through your jspm config and check if all modules load without errors. Helps debug missing dependencies or shims",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Munter/jspm-config-test.git"
+  },
+  "keywords": [
+    "jspm",
+    "config",
+    "migration",
+    "test"
+  ],
+  "author": "Peter Müller <munter@fumle.dk>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Munter/jspm-config-test/issues"
+  },
+  "homepage": "https://github.com/Munter/jspm-config-test"
+}
