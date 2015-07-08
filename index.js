@@ -44,7 +44,7 @@ app.listen(9001, function () {
               console.error(chalk.red('FAILED'), moduleName, err);
             })
             .then(done);
-        }, 300);
+        }, 500);
 
       }
     });
