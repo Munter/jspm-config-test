@@ -1,6 +1,6 @@
 {
   "name": "jspm-config-test",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A tool to run through your jspm config and check if all modules load without errors. Helps debug missing dependencies or shims",
   "main": "index.js",
   "directories": {
