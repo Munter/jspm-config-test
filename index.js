@@ -16,9 +16,6 @@ function testModule(moduleName) {
         FetchExternalResources: ['script', 'img', 'css', 'frame', 'iframe', 'link'],
         ProcessExternalResources: ['script']
       },
-      scripts: [
-        jspm.directories.packages + '/system.js'
-      ],
       done: function (errs, window) {
         if (errs) {
           console.error(window.location.href, errs);
@@ -27,7 +24,7 @@ function testModule(moduleName) {
         setTimeout(function () {
           var System = window.System;
 
-          System.import(jspm.configFile.replace('.js', ''))
+          System.import(jspm.configFile)
             .then(function () {
               return System.import(moduleName)
                 .then(function () { return moduleName; });
@@ -46,14 +43,17 @@ function logResults(results) {
     if (result.state === 'fulfilled') {
       console.log(chalk.green('LOADED'), result.value);
     } else {
-      console.log(chalk.red('FAILED'), result.reason);
+      console.log(chalk.red('FAILED'), result.reason, result.reason.stack);
     }
   });
 }
 
 app
   .get('*.html', function (req, res) {
-    res.end('');
+    res.end([
+      '<script src="' + jspm.directories.packages + '/system.js">',
+      // '</script><script src="' + jspm.configFile + '"></script>'
+    ].join('\n'));
   })
   .use(express.static(process.cwd()));
 
