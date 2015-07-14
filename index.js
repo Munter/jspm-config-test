@@ -21,17 +21,17 @@ function testModule(moduleName) {
           console.error(window.location.href, errs);
         }
 
-        setTimeout(function () {
-          var System = window.System;
+        // setTimeout(function () {
+        //   var System = window.System;
 
-          System.import(jspm.configFile)
-            .then(function () {
-              return System.import(moduleName)
-                .then(function () { return moduleName; });
-            })
-            .then(resolve)
-            .catch(reject)
-        }, 500);
+        //   System.import(jspm.configFile)
+        //     .then(function () {
+        //       return System.import(moduleName)
+        //         .then(function () { return moduleName; });
+        //     })
+        //     .then(resolve)
+        //     .catch(reject)
+        // }, 500);
       }
     });
 
@@ -49,52 +49,56 @@ function logResults(results) {
 }
 
 app
-  .get('*.html', function (req, res) {
+  .get('/:moduleName.html', function (req, res) {
     res.end([
-      '<script src="' + jspm.directories.packages + '/system.js">',
-      // '</script><script src="' + jspm.configFile + '"></script>'
+      '<script src="' + jspm.directories.packages + '/system.js"></script>',
+      '<script src="' + jspm.configFile + '"></script>',
+      '<script>System.import("' + req.params.moduleName + '").then(console.log.bind(console, "' + req.params.moduleName + '"));</script>'
     ].join('\n'));
   })
   .use(express.static(process.cwd()));
 
 app.listen(9001, function () {
 
-  When.settle(Object.keys(jspm.dependencies).map(testModule))
-    .tap(function (results) {
-      console.log('\nDependencies');
-    })
-    .tap(logResults)
+  When.resolve()
+    // .then(function () {
+    //   return When.settle(Object.keys(jspm.dependencies).map(testModule))
+    // })
+    // .tap(function (results) {
+    //   console.log('\nDependencies');
+    // })
+    // .tap(logResults)
 
     //////////
 
-    .then(function () {
-      return When.settle(Object.keys(jspm.devDependencies).map(testModule));
-    })
-    .tap(function (results) {
-      console.log('\nDevelopment Dependencies');
-    })
-    .tap(logResults)
+    // .then(function () {
+    //   return When.settle(Object.keys(jspm.devDependencies).map(testModule));
+    // })
+    // .tap(function (results) {
+    //   console.log('\nDevelopment Dependencies');
+    // })
+    // .tap(logResults)
 
     //////////
 
-    .then(function () {
-      return System.import(jspm.configFile).then(function () {
-        var mappings = System.map;
+    // .then(function () {
+    //   return System.import(jspm.configFile).then(function () {
+    //     var mappings = System.map;
 
-        var localPaths = Object.keys(mappings).filter(function (moduleName) {
-          return moduleName.indexOf(':') === -1 && mappings[moduleName].indexOf(':') === -1;
-        });
+    //     var localPaths = Object.keys(mappings).filter(function (moduleName) {
+    //       return moduleName.indexOf(':') === -1 && mappings[moduleName].indexOf(':') === -1;
+    //     });
 
-        return When.settle(localPaths.map(testModule));
-      });
-    })
-    .tap(function (results) {
-      console.log('\nLocal mappings');
-    })
-    .tap(logResults)
+    //     return When.settle(localPaths.map(testModule));
+    //   });
+    // })
+    // .tap(function (results) {
+    //   console.log('\nLocal mappings');
+    // })
+    // .tap(logResults)
 
     //////////
 
-    .finally(process.exit);
+    // .finally(process.exit);
 
 });
