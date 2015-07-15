@@ -3,6 +3,7 @@ var jsdom = require('jsdom');
 var chalk = require('chalk');
 var When = require('when');
 var System = require('systemjs');
+var Path = require('path');
 
 var express = require('express');
 var app = express();
@@ -51,12 +52,12 @@ function logResults(results) {
 app
   .get('/:moduleName.html', function (req, res) {
     res.end([
-      '<script src="' + jspm.directories.packages + '/system.js"></script>',
-      '<script src="' + jspm.configFile + '"></script>',
+      '<script src="' + (jspm.directories.packages || 'jspm_packages') + '/system.js"></script>',
+      '<script src="' + (jspm.configFile || 'config.js') + '"></script>',
       '<script>System.import("' + req.params.moduleName + '").then(console.log.bind(console, "' + req.params.moduleName + '"));</script>'
     ].join('\n'));
   })
-  .use(express.static(process.cwd()));
+  .use(express.static(Path.join(process.cwd(), jspm.directories.baseURL)));
 
 app.listen(9001, function () {
 
