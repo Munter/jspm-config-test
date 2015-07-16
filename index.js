@@ -8,6 +8,11 @@ var Path = require('path');
 var express = require('express');
 var app = express();
 
+var serverRoot = Path.join(process.cwd());
+var baseUrl = jspm.directories.baseURL || '';
+var systemjsUrl = Path.join(jspm.directories.packages || Path.join(baseUrl, 'jspm_packages'), 'system.js');
+var configUrl = jspm.configFile || Path.join(baseUrl, 'config.js');
+
 function testModule(moduleName) {
   return When.promise(function (resolve, reject) {
 
@@ -52,14 +57,15 @@ function logResults(results) {
 app
   .get('/:moduleName.html', function (req, res) {
     res.end([
-      '<script src="' + (jspm.directories.packages || 'jspm_packages') + '/system.js"></script>',
-      '<script src="' + (jspm.configFile || 'config.js') + '"></script>',
+      '<script src="' + systemjsUrl + '"></script>',
+      '<script src="' + configUrl + '"></script>',
       '<script>System.import("' + req.params.moduleName + '").then(console.log.bind(console, "' + req.params.moduleName + '"));</script>'
     ].join('\n'));
   })
-  .use(express.static(Path.join(process.cwd(), jspm.directories.baseURL)));
+  .use(express.static(serverRoot));
 
 app.listen(9001, function () {
+  console.log('started sever with server root ' + serverRoot + ' on http://localhost:9001');
 
   When.resolve()
     // .then(function () {
