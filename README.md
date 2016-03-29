@@ -13,7 +13,7 @@ Usage
 ```
 npm install -g jspm-config-test
 cd path/to/your/project
-jspm-config-test
+jspm-config-check
 ```
 
 This will read your `package.json` and find the relevant information to test your jspm configuration.
